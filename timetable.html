@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Timetable Module</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="yellow-topbar"></div>
+
+<div class="site-header">
+  <div class="header-logo-circle">🎓</div>
+  <div class="header-text">
+    <div class="hindi">डॉ बी आर अम्बेडकर &nbsp;|&nbsp; राष्ट्रीय प्रौद्योगिकी संस्थान</div>
+    <div class="institute-name">College Administration ERP System</div>
+    <div class="sub-name">Department of Academic Affairs &amp; Administration</div>
+  </div>
+</div>
+
+<div class="site-navbar">
+  <div class="navbar-brand">| ERP - ADMIN |</div>
+  <a href="dashboard.html">🏠 Home</a>
+  <a href="timetable.html" class="active">🗓️ Timetable Module</a>
+  <div class="navbar-right">
+    <div class="welcome-text">Welcome &nbsp;<span id="welcomeUser">ADMIN</span></div>
+    <a href="#">🔑 Change Password</a>
+    <a href="index.html" onclick="sessionStorage.clear()">↪ Logout</a>
+  </div>
+</div>
+
+<div class="module-layout">
+
+  <div class="module-sidebar">
+    <div class="sidebar-heading">Timetable Menu</div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active" onclick="showPanel('addSlot', this)"><span class="menu-icon">➕</span> Add Timetable Entry</a></li>
+      <li><a href="#" onclick="showPanel('viewTimetable', this)"><span class="menu-icon">🗓️</span> View Timetable Grid</a></li>
+      <li><a href="#" onclick="showPanel('viewList', this)"><span class="menu-icon">📋</span> View All Entries</a></li>
+      <li><a href="#" onclick="showPanel('updateSlot', this)"><span class="menu-icon">✏️</span> Update Entry</a></li>
+      <li><a href="#" onclick="showPanel('deleteSlot', this)"><span class="menu-icon">🗑️</span> Delete Entry</a></li>
+    </ul>
+  </div>
+
+  <div class="module-content">
+
+    <!-- ADD SLOT -->
+    <div class="content-panel active" id="addSlot">
+      <div class="panel-title">➕ Add Timetable Entry</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="addSlotSuccess">✅ Timetable entry added!</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Class / Section *</label>
+            <input type="text" id="t_class" placeholder="e.g. B.Tech CSE 3rd Year - A">
+          </div>
+          <div class="form-group">
+            <label>Semester *</label>
+            <select id="t_sem">
+              <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+              <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Day *</label>
+            <select id="t_day">
+              <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+              <option>Thursday</option><option>Friday</option><option>Saturday</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Time Slot *</label>
+            <select id="t_time">
+              <option>08:00 - 09:00</option>
+              <option>09:00 - 10:00</option>
+              <option>10:00 - 11:00</option>
+              <option>11:00 - 12:00</option>
+              <option>12:00 - 13:00</option>
+              <option>13:00 - 14:00</option>
+              <option>14:00 - 15:00</option>
+              <option>15:00 - 16:00</option>
+              <option>16:00 - 17:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Subject Code / Name *</label><input type="text" id="t_subject" placeholder="e.g. CS401 - Data Structures"></div>
+          <div class="form-group"><label>Lecturer Name *</label><input type="text" id="t_lecturer" placeholder="e.g. Dr. Rajesh Kumar"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Room / Lab Number *</label>
+            <input type="text" id="t_room" placeholder="e.g. LH-101 or Lab-3">
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select id="t_type">
+              <option>Lecture</option><option>Lab / Practical</option>
+              <option>Tutorial</option><option>Workshop</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Academic Year</label>
+            <input type="text" id="t_ayear" placeholder="e.g. 2024-25">
+          </div>
+          <div class="form-group">
+            <label>Remarks</label>
+            <input type="text" id="t_remarks" placeholder="Optional notes">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="addSlot()">➕ Add Entry</button>
+          <button class="btn btn-secondary" onclick="clearSlotForm()">🔄 Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW TIMETABLE GRID -->
+    <div class="content-panel" id="viewTimetable">
+      <div class="panel-title">🗓️ Timetable Grid View</div>
+      <div class="panel-body">
+        <div class="table-toolbar">
+          <div class="form-group" style="display:flex;align-items:center;gap:10px;margin:0;">
+            <label style="margin:0;white-space:nowrap;font-weight:600;">Filter by Class:</label>
+            <input type="text" id="gridFilter" placeholder="e.g. B.Tech CSE" style="padding:6px 10px;border:1px solid #ccc;border-radius:3px;font-size:13px;width:220px;">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="renderGrid()">🔍 Show Grid</button>
+        </div>
+        <div id="gridArea" style="overflow-x:auto; margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- VIEW LIST -->
+    <div class="content-panel" id="viewList">
+      <div class="panel-title">📋 All Timetable Entries</div>
+      <div class="panel-body">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <input type="text" id="ttViewSearch" placeholder="Search class, subject, lecturer..." oninput="filterTTTable()">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showPanel('addSlot',null)">➕ Add Entry</button>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>#</th><th>ID</th><th>Class</th><th>Day</th><th>Time</th>
+              <th>Subject</th><th>Lecturer</th><th>Room</th><th>Type</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="ttTableBody"><tr><td colspan="10" class="empty-msg">No entries found.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <div class="content-panel" id="updateSlot">
+      <div class="panel-title">✏️ Update Timetable Entry</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="updateSlotSuccess">✅ Entry updated!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Entry ID</label><input type="number" id="us_id" placeholder="Enter Entry ID"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchSlotForUpdate()">🔍 Find</button>
+          </div>
+        </div>
+        <div class="separator"></div>
+        <div id="updateSlotArea" style="display:none;">
+          <div class="form-row">
+            <div class="form-group"><label>Class / Section</label><input type="text" id="us_class"></div>
+            <div class="form-group">
+              <label>Day</label>
+              <select id="us_day">
+                <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+                <option>Thursday</option><option>Friday</option><option>Saturday</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Time Slot</label>
+              <select id="us_time">
+                <option>08:00 - 09:00</option><option>09:00 - 10:00</option><option>10:00 - 11:00</option>
+                <option>11:00 - 12:00</option><option>12:00 - 13:00</option><option>13:00 - 14:00</option>
+                <option>14:00 - 15:00</option><option>15:00 - 16:00</option><option>16:00 - 17:00</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Subject</label><input type="text" id="us_subject"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Lecturer</label><input type="text" id="us_lecturer"></div>
+            <div class="form-group"><label>Room</label><input type="text" id="us_room"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="updateSlot()">💾 Save Changes</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('updateSlotArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE -->
+    <div class="content-panel" id="deleteSlot">
+      <div class="panel-title">🗑️ Delete Timetable Entry</div>
+      <div class="panel-body">
+        <div class="alert alert-danger show" style="display:block!important;">⚠️ This will permanently delete the timetable entry.</div>
+        <div class="alert alert-success" id="deleteSlotSuccess">✅ Entry deleted!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Entry ID</label><input type="number" id="ds_id" placeholder="Enter Entry ID"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchSlotForDelete()">🔍 Find</button>
+          </div>
+        </div>
+        <div id="deleteSlotArea" style="display:none; margin-top:14px;">
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Class</th><th>Day</th><th>Time</th><th>Subject</th><th>Lecturer</th></tr></thead>
+            <tbody id="deleteSlotBody"></tbody>
+          </table>
+          <div class="form-actions" style="margin-top:14px;">
+            <button class="btn btn-danger" onclick="confirmSlotDelete()">🗑️ Confirm Delete</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('deleteSlotArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="site-footer">&copy; 2025 College Administration ERP System. All Rights Reserved.</div>
+
+<script>
+  let slots = JSON.parse(localStorage.getItem('erp_timetable') || '[]');
+  let nextId = parseInt(localStorage.getItem('erp_tt_nextid') || '1');
+  let delSlotTarget = null;
+
+  function saveTT() {
+    localStorage.setItem('erp_timetable', JSON.stringify(slots));
+    localStorage.setItem('erp_tt_nextid', nextId);
+  }
+
+  const DAYS  = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const TIMES = ['08:00 - 09:00','09:00 - 10:00','10:00 - 11:00','11:00 - 12:00',
+                 '12:00 - 13:00','13:00 - 14:00','14:00 - 15:00','15:00 - 16:00','16:00 - 17:00'];
+
+  function showPanel(id, link) {
+    document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    if (id === 'viewList') renderTTTable();
+  }
+
+  function addSlot() {
+    const cls      = document.getElementById('t_class').value.trim();
+    const subject  = document.getElementById('t_subject').value.trim();
+    const lecturer = document.getElementById('t_lecturer').value.trim();
+    const room     = document.getElementById('t_room').value.trim();
+    if (!cls || !subject || !lecturer || !room) { alert('Class, Subject, Lecturer, and Room are required.'); return; }
+
+    slots.push({
+      id:       nextId++,
+      cls,
+      sem:      document.getElementById('t_sem').value,
+      day:      document.getElementById('t_day').value,
+      time:     document.getElementById('t_time').value,
+      subject,
+      lecturer,
+      room,
+      type:     document.getElementById('t_type').value,
+      ayear:    document.getElementById('t_ayear').value,
+      remarks:  document.getElementById('t_remarks').value
+    });
+    saveTT();
+    showAlert('addSlotSuccess');
+    clearSlotForm();
+  }
+
+  function clearSlotForm() {
+    ['t_class','t_subject','t_lecturer','t_room','t_ayear','t_remarks'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('t_type').value = 'Lecture';
+  }
+
+  const typeBadge = t => {
+    const m = {Lecture:'badge-info', 'Lab / Practical':'badge-warning', Tutorial:'badge-success', Workshop:'badge-danger'};
+    return `<span class="badge ${m[t]||'badge-info'}">${t}</span>`;
+  };
+
+  function renderTTTable(data) {
+    const list = data || slots;
+    const tbody = document.getElementById('ttTableBody');
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="10" class="empty-msg">No entries found.</td></tr>'; return; }
+    tbody.innerHTML = list.map(s => `
+      <tr>
+        <td>${s.id}</td>
+        <td><strong>#${s.id}</strong></td>
+        <td>${s.cls}</td>
+        <td>${s.day}</td>
+        <td style="white-space:nowrap;">${s.time}</td>
+        <td>${s.subject}</td>
+        <td>${s.lecturer}</td>
+        <td>${s.room}</td>
+        <td>${typeBadge(s.type)}</td>
+        <td><div class="action-btns">
+          <button class="btn btn-warning btn-sm" onclick="quickEditSlot(${s.id})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="quickDeleteSlot(${s.id})">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function filterTTTable() {
+    const q = document.getElementById('ttViewSearch').value.toLowerCase();
+    renderTTTable(slots.filter(s =>
+      s.cls.toLowerCase().includes(q) || s.subject.toLowerCase().includes(q) || s.lecturer.toLowerCase().includes(q)
+    ));
+  }
+
+  function renderGrid() {
+    const filter = document.getElementById('gridFilter').value.toLowerCase().trim();
+    const filtered = filter ? slots.filter(s => s.cls.toLowerCase().includes(filter)) : slots;
+    const area = document.getElementById('gridArea');
+
+    if (!filtered.length) { area.innerHTML = '<div class="empty-msg">No timetable entries match this filter. Add entries first.</div>'; return; }
+
+    // Build lookup
+    const lookup = {};
+    filtered.forEach(s => { const k = `${s.day}|${s.time}`; if (!lookup[k]) lookup[k] = []; lookup[k].push(s); });
+
+    let html = `<table class="timetable-grid">
+      <thead><tr><th>Day / Time</th>${TIMES.map(t => `<th style="font-size:11px;">${t}</th>`).join('')}</tr></thead>
+      <tbody>`;
+    DAYS.forEach(day => {
+      html += `<tr><td style="background:var(--table-header);color:#fff;font-weight:700;white-space:nowrap;padding:8px 10px;">${day}</td>`;
+      TIMES.forEach(time => {
+        const entries = lookup[`${day}|${time}`] || [];
+        if (entries.length === 0) {
+          html += `<td><span class="timetable-cell free">—</span></td>`;
+        } else {
+          html += `<td>${entries.map(e => `<div class="timetable-cell" title="Room: ${e.room} | ${e.lecturer}">${e.subject.split(' - ').pop().substring(0,10)}<br><small style="font-weight:normal;font-size:10px;">${e.room}</small></div>`).join('<br>')}</td>`;
+        }
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    area.innerHTML = html;
+  }
+
+  function searchSlotForUpdate() {
+    const id = parseInt(document.getElementById('us_id').value);
+    const s = slots.find(x => x.id === id);
+    if (!s) { alert('Entry not found!'); return; }
+    document.getElementById('us_class').value   = s.cls;
+    document.getElementById('us_day').value     = s.day;
+    document.getElementById('us_time').value    = s.time;
+    document.getElementById('us_subject').value = s.subject;
+    document.getElementById('us_lecturer').value= s.lecturer;
+    document.getElementById('us_room').value    = s.room;
+    document.getElementById('updateSlotArea').style.display = 'block';
+  }
+
+  function updateSlot() {
+    const id = parseInt(document.getElementById('us_id').value);
+    const idx = slots.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    slots[idx].cls      = document.getElementById('us_class').value;
+    slots[idx].day      = document.getElementById('us_day').value;
+    slots[idx].time     = document.getElementById('us_time').value;
+    slots[idx].subject  = document.getElementById('us_subject').value;
+    slots[idx].lecturer = document.getElementById('us_lecturer').value;
+    slots[idx].room     = document.getElementById('us_room').value;
+    saveTT();
+    showAlert('updateSlotSuccess');
+    document.getElementById('updateSlotArea').style.display = 'none';
+  }
+
+  function searchSlotForDelete() {
+    const id = parseInt(document.getElementById('ds_id').value);
+    const s = slots.find(x => x.id === id);
+    if (!s) { alert('Entry not found!'); return; }
+    delSlotTarget = s.id;
+    document.getElementById('deleteSlotBody').innerHTML =
+      `<tr><td>${s.id}</td><td>${s.cls}</td><td>${s.day}</td><td>${s.time}</td><td>${s.subject}</td><td>${s.lecturer}</td></tr>`;
+    document.getElementById('deleteSlotArea').style.display = 'block';
+  }
+
+  function confirmSlotDelete() {
+    if (!delSlotTarget) return;
+    slots = slots.filter(s => s.id !== delSlotTarget);
+    saveTT(); delSlotTarget = null;
+    document.getElementById('deleteSlotArea').style.display = 'none';
+    document.getElementById('ds_id').value = '';
+    showAlert('deleteSlotSuccess');
+  }
+
+  function quickDeleteSlot(id) {
+    if (!confirm(`Delete timetable entry #${id}?`)) return;
+    slots = slots.filter(s => s.id !== id);
+    saveTT(); renderTTTable();
+  }
+
+  function quickEditSlot(id) {
+    document.getElementById('us_id').value = id;
+    showPanel('updateSlot', document.querySelectorAll('.sidebar-menu a')[3]);
+    setTimeout(() => searchSlotForUpdate(), 50);
+  }
+
+  function showAlert(id) {
+    const el = document.getElementById(id);
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  const user = sessionStorage.getItem('erp_user');
+  if (!user) window.location.href = 'index.html';
+  else document.getElementById('welcomeUser').textContent = user.toUpperCase();
+</script>
+</body>
+</html>

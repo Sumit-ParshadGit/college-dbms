@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="yellow-topbar"></div>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="header-logo-circle">🎓</div>
+  <div class="header-text">
+    <div class="hindi">डॉ बी आर अम्बेडकर &nbsp;|&nbsp; राष्ट्रीय प्रौद्योगिकी संस्थान</div>
+    <div class="institute-name">College Administration ERP System</div>
+    <div class="sub-name">Department of Academic Affairs &amp; Administration</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<div class="site-navbar">
+  <div class="navbar-brand">| ERP - ADMIN |</div>
+  <a href="dashboard.html" class="active">🏠 Home</a>
+  <div class="navbar-right">
+    <div class="welcome-text">Welcome &nbsp;<span id="welcomeUser">ADMIN</span></div>
+    <a href="#">🔑 Change Password</a>
+    <a href="index.html" onclick="sessionStorage.clear()">↪ Logout</a>
+  </div>
+</div>
+
+<!-- DASHBOARD BODY -->
+<div class="dashboard-body">
+  <div class="module-grid">
+
+    <a href="student.html" class="module-card">
+      <div class="module-card-icon">🎓</div>
+      <div class="module-card-title">Student Module</div>
+    </a>
+
+    <a href="course.html" class="module-card">
+      <div class="module-card-icon">📚</div>
+      <div class="module-card-title">Course Module</div>
+    </a>
+
+    <a href="admission.html" class="module-card">
+      <div class="module-card-icon">📋</div>
+      <div class="module-card-title">Admission Module</div>
+    </a>
+
+    <a href="subject.html" class="module-card">
+      <div class="module-card-icon">📖</div>
+      <div class="module-card-title">Subject Module</div>
+    </a>
+
+    <a href="lecturer.html" class="module-card">
+      <div class="module-card-icon">👨‍🏫</div>
+      <div class="module-card-title">Lecturer Module</div>
+    </a>
+
+    <a href="timetable.html" class="module-card">
+      <div class="module-card-icon">🗓️</div>
+      <div class="module-card-title">Timetable Module</div>
+    </a>
+
+  </div>
+</div>
+
+<div class="site-footer">
+  &copy; 2025 College Administration ERP System. All Rights Reserved.
+</div>
+
+<script>
+  /* Check login */
+  const user = sessionStorage.getItem('erp_user');
+  if (!user) window.location.href = 'index.html';
+  else document.getElementById('welcomeUser').textContent = user.toUpperCase();
+</script>
+</body>
+</html>

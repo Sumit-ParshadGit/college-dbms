@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="yellow-topbar"></div>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="header-logo-circle">🎓</div>
+  <div class="header-text">
+    <div class="hindi">डॉ बी आर अम्बेडकर &nbsp;|&nbsp; राष्ट्रीय प्रौद्योगिकी संस्थान</div>
+    <div class="institute-name">College Administration ERP System</div>
+    <div class="sub-name">Department of Academic Affairs &amp; Administration</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<div class="site-navbar">
+  <div class="navbar-brand">| ERP - ADMIN |</div>
+</div>
+
+<!-- LOGIN BODY -->
+<div class="login-page-body">
+  <div class="login-card">
+    <div class="login-card-header">
+      <div class="login-avatar">👤</div>
+      <div class="login-title">College ERP Login</div>
+    </div>
+
+    <div class="login-error" id="loginError">❌ Invalid credentials or captcha. Please try again.</div>
+
+    <div class="form-group">
+      <label>Username:</label>
+      <input type="text" id="username" placeholder="Enter your username" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label>Password:</label>
+      <input type="password" id="password" placeholder="Enter your password">
+    </div>
+
+    <div class="captcha-row">
+      <span class="captcha-label">Captcha</span>
+      <div class="captcha-box" id="captchaDisplay"></div>
+    </div>
+
+    <div class="captcha-input-row">
+      <input type="text" id="captchaInput" placeholder="Enter Captcha Here" autocomplete="off" maxlength="6">
+      <button class="captcha-refresh" onclick="refreshCaptcha()" title="Refresh Captcha">🔄</button>
+    </div>
+
+    <button class="btn-login" onclick="doLogin()">Login</button>
+
+    <div class="login-footer">
+      <a href="#">Forgot Password?</a>
+    </div>
+  </div>
+</div>
+
+<div class="site-footer">
+  &copy; 2025 College Administration ERP System. All Rights Reserved.
+</div>
+
+<script>
+  /* ---- Demo credentials ---- */
+  const ADMIN_USER = 'Sumit';
+  const ADMIN_PASS = 'sumit123';
+
+  let currentCaptcha = '';
+
+  function generateCaptcha() {
+    const chars = '0123456789';
+    let cap = '';
+    for (let i = 0; i < 6; i++) cap += chars[Math.floor(Math.random() * chars.length)];
+    return cap;
+  }
+
+  function refreshCaptcha() {
+    currentCaptcha = generateCaptcha();
+    document.getElementById('captchaDisplay').textContent = currentCaptcha;
+    document.getElementById('captchaInput').value = '';
+  }
+
+  function doLogin() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value;
+    const cap  = document.getElementById('captchaInput').value.trim();
+    const err  = document.getElementById('loginError');
+
+    if (user === ADMIN_USER && pass === ADMIN_PASS && cap === currentCaptcha) {
+      sessionStorage.setItem('erp_user', user);
+      err.style.display = 'none';
+      window.location.href = 'dashboard.html';
+    } else {
+      err.style.display = 'block';
+      refreshCaptcha();
+    }
+  }
+
+  /* Allow Enter key to submit */
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  /* Init captcha on load */
+  refreshCaptcha();
+</script>
+</body>
+</html>

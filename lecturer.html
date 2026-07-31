@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Lecturer Module</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="yellow-topbar"></div>
+
+<div class="site-header">
+  <div class="header-logo-circle">🎓</div>
+  <div class="header-text">
+    <div class="hindi">डॉ बी आर अम्बेडकर &nbsp;|&nbsp; राष्ट्रीय प्रौद्योगिकी संस्थान</div>
+    <div class="institute-name">College Administration ERP System</div>
+    <div class="sub-name">Department of Academic Affairs &amp; Administration</div>
+  </div>
+</div>
+
+<div class="site-navbar">
+  <div class="navbar-brand">| ERP - ADMIN |</div>
+  <a href="dashboard.html">🏠 Home</a>
+  <a href="lecturer.html" class="active">👨‍🏫 Lecturer Module</a>
+  <div class="navbar-right">
+    <div class="welcome-text">Welcome &nbsp;<span id="welcomeUser">ADMIN</span></div>
+    <a href="#">🔑 Change Password</a>
+    <a href="index.html" onclick="sessionStorage.clear()">↪ Logout</a>
+  </div>
+</div>
+
+<div class="module-layout">
+
+  <div class="module-sidebar">
+    <div class="sidebar-heading">Lecturer Menu</div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active" onclick="showPanel('addLecturer', this)"><span class="menu-icon">➕</span> Add Lecturer</a></li>
+      <li><a href="#" onclick="showPanel('viewLecturers', this)"><span class="menu-icon">📋</span> View All Lecturers</a></li>
+      <li><a href="#" onclick="showPanel('updateLecturer', this)"><span class="menu-icon">✏️</span> Update Lecturer</a></li>
+      <li><a href="#" onclick="showPanel('deleteLecturer', this)"><span class="menu-icon">🗑️</span> Delete Lecturer</a></li>
+      <li><a href="#" onclick="showPanel('searchLecturer', this)"><span class="menu-icon">🔍</span> Search Lecturer</a></li>
+    </ul>
+  </div>
+
+  <div class="module-content">
+
+    <!-- ADD -->
+    <div class="content-panel active" id="addLecturer">
+      <div class="panel-title">➕ Add New Lecturer</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="addLecSuccess">✅ Lecturer added successfully!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Employee ID *</label><input type="text" id="l_empid" placeholder="e.g. EMP2024001"></div>
+          <div class="form-group"><label>Full Name *</label><input type="text" id="l_name" placeholder="e.g. Dr. Rajesh Kumar"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Designation *</label>
+            <select id="l_designation">
+              <option value="">-- Select --</option>
+              <option>Professor</option>
+              <option>Associate Professor</option>
+              <option>Assistant Professor</option>
+              <option>Lecturer</option>
+              <option>Lab Instructor</option>
+              <option>Guest Faculty</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Department *</label>
+            <select id="l_dept">
+              <option value="">-- Select --</option>
+              <option>Computer Science and Engineering</option>
+              <option>Information Technology</option>
+              <option>Electronics and Communication</option>
+              <option>Electrical Engineering</option>
+              <option>Mechanical Engineering</option>
+              <option>Civil Engineering</option>
+              <option>Mathematics</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Management Studies</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Qualification</label>
+            <select id="l_qual">
+              <option>Ph.D</option><option>M.Tech</option><option>M.Sc</option>
+              <option>MBA</option><option>B.Tech</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Specialization</label><input type="text" id="l_spec" placeholder="e.g. Machine Learning, VLSI"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Email Address *</label><input type="email" id="l_email" placeholder="lecturer@college.ac.in"></div>
+          <div class="form-group"><label>Mobile Number</label><input type="text" id="l_mobile" placeholder="10-digit" maxlength="10"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Date of Joining</label><input type="date" id="l_joining"></div>
+          <div class="form-group">
+            <label>Experience (Years)</label>
+            <input type="number" id="l_exp" placeholder="e.g. 5" min="0" max="50">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Employment Type</label>
+            <select id="l_emptype">
+              <option>Permanent</option><option>Contract</option><option>Guest</option><option>Visiting</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="l_status"><option>Active</option><option>Inactive</option><option>On Leave</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Research Area / Publications</label><textarea id="l_research" placeholder="Research interests, publications..."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="addLecturer()">➕ Add Lecturer</button>
+          <button class="btn btn-secondary" onclick="clearLecForm()">🔄 Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW -->
+    <div class="content-panel" id="viewLecturers">
+      <div class="panel-title">📋 All Lecturers</div>
+      <div class="panel-body">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <input type="text" id="lViewSearch" placeholder="Search name, ID, department..." oninput="filterLecTable()">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showPanel('addLecturer',null)">➕ Add Lecturer</button>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>#</th><th>Emp ID</th><th>Name</th><th>Designation</th>
+              <th>Department</th><th>Qualification</th><th>Experience</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="lecTableBody"><tr><td colspan="9" class="empty-msg">No lecturers found.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <div class="content-panel" id="updateLecturer">
+      <div class="panel-title">✏️ Update Lecturer</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="updateLecSuccess">✅ Lecturer updated!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Search by Employee ID</label><input type="text" id="lu_search" placeholder="Enter Emp ID"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchLecForUpdate()">🔍 Find</button>
+          </div>
+        </div>
+        <div class="separator"></div>
+        <div id="updateLecArea" style="display:none;">
+          <div class="form-row">
+            <div class="form-group"><label>Emp ID</label><input type="text" id="lu_empid" readonly style="background:#eee;"></div>
+            <div class="form-group"><label>Full Name *</label><input type="text" id="lu_name"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Designation</label>
+              <select id="lu_designation">
+                <option>Professor</option><option>Associate Professor</option><option>Assistant Professor</option>
+                <option>Lecturer</option><option>Lab Instructor</option><option>Guest Faculty</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Specialization</label><input type="text" id="lu_spec"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email</label><input type="email" id="lu_email"></div>
+            <div class="form-group"><label>Mobile</label><input type="text" id="lu_mobile"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Status</label>
+              <select id="lu_status"><option>Active</option><option>Inactive</option><option>On Leave</option></select>
+            </div>
+            <div class="form-group"><label>Experience (Years)</label><input type="number" id="lu_exp"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="updateLecturer()">💾 Save Changes</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('updateLecArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE -->
+    <div class="content-panel" id="deleteLecturer">
+      <div class="panel-title">🗑️ Delete Lecturer</div>
+      <div class="panel-body">
+        <div class="alert alert-danger show" style="display:block!important;">⚠️ Deleting a lecturer record is permanent.</div>
+        <div class="alert alert-success" id="deleteLecSuccess">✅ Lecturer deleted!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Search by Employee ID</label><input type="text" id="ld_search" placeholder="Enter Emp ID"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchLecForDelete()">🔍 Find</button>
+          </div>
+        </div>
+        <div id="deleteLecArea" style="display:none; margin-top:14px;">
+          <table class="data-table">
+            <thead><tr><th>Emp ID</th><th>Name</th><th>Designation</th><th>Department</th><th>Status</th></tr></thead>
+            <tbody id="deleteLecBody"></tbody>
+          </table>
+          <div class="form-actions" style="margin-top:14px;">
+            <button class="btn btn-danger" onclick="confirmLecDelete()">🗑️ Confirm Delete</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('deleteLecArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="content-panel" id="searchLecturer">
+      <div class="panel-title">🔍 Search Lecturer</div>
+      <div class="panel-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Search by</label>
+            <select id="lsrch_by">
+              <option value="name">Name</option>
+              <option value="empid">Employee ID</option>
+              <option value="dept">Department</option>
+              <option value="designation">Designation</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Keyword</label><input type="text" id="lsrch_kw" placeholder="Enter keyword"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchLecturers()">🔍 Search</button>
+          </div>
+        </div>
+        <div id="lecSearchResults" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="site-footer">&copy; 2025 College Administration ERP System. All Rights Reserved.</div>
+
+<script>
+  let lecturers = JSON.parse(localStorage.getItem('erp_lecturers') || '[]');
+  let delLecTarget = null;
+
+  function saveLecs() { localStorage.setItem('erp_lecturers', JSON.stringify(lecturers)); }
+
+  function showPanel(id, link) {
+    document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    if (id === 'viewLecturers') renderLecTable();
+  }
+
+  function addLecturer() {
+    const empid = document.getElementById('l_empid').value.trim();
+    const name  = document.getElementById('l_name').value.trim();
+    const desig = document.getElementById('l_designation').value;
+    const dept  = document.getElementById('l_dept').value;
+    const email = document.getElementById('l_email').value.trim();
+    if (!empid || !name || !desig || !dept || !email) { alert('Emp ID, Name, Designation, Department, and Email are required.'); return; }
+    if (lecturers.find(l => l.empid === empid)) { alert('Employee ID already exists!'); return; }
+    lecturers.push({
+      empid, name, desig, dept, email,
+      qual:     document.getElementById('l_qual').value,
+      spec:     document.getElementById('l_spec').value,
+      mobile:   document.getElementById('l_mobile').value,
+      joining:  document.getElementById('l_joining').value,
+      exp:      document.getElementById('l_exp').value,
+      emptype:  document.getElementById('l_emptype').value,
+      status:   document.getElementById('l_status').value,
+      research: document.getElementById('l_research').value
+    });
+    saveLecs();
+    showAlert('addLecSuccess');
+    clearLecForm();
+  }
+
+  function clearLecForm() {
+    ['l_empid','l_name','l_spec','l_email','l_mobile','l_joining','l_exp','l_research'].forEach(id => document.getElementById(id).value = '');
+    ['l_designation','l_dept'].forEach(id => document.getElementById(id).selectedIndex = 0);
+    document.getElementById('l_status').value = 'Active';
+  }
+
+  const statusBadge = s => {
+    const m = {Active:'badge-success', Inactive:'badge-danger', 'On Leave':'badge-warning'};
+    return `<span class="badge ${m[s]||'badge-info'}">${s}</span>`;
+  };
+
+  function renderLecTable(data) {
+    const list = data || lecturers;
+    const tbody = document.getElementById('lecTableBody');
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-msg">No lecturers found.</td></tr>'; return; }
+    tbody.innerHTML = list.map((l, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td><strong>${l.empid}</strong></td>
+        <td>${l.name}</td>
+        <td>${l.desig}</td>
+        <td>${l.dept}</td>
+        <td>${l.qual}</td>
+        <td>${l.exp ? l.exp + ' yrs' : '-'}</td>
+        <td>${statusBadge(l.status)}</td>
+        <td><div class="action-btns">
+          <button class="btn btn-warning btn-sm" onclick="quickEditLec('${l.empid}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="quickDeleteLec('${l.empid}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function filterLecTable() {
+    const q = document.getElementById('lViewSearch').value.toLowerCase();
+    renderLecTable(lecturers.filter(l =>
+      l.name.toLowerCase().includes(q) || l.empid.toLowerCase().includes(q) || (l.dept||'').toLowerCase().includes(q)
+    ));
+  }
+
+  function searchLecForUpdate() {
+    const q = document.getElementById('lu_search').value.trim();
+    const l = lecturers.find(x => x.empid === q);
+    if (!l) { alert('Lecturer not found!'); return; }
+    document.getElementById('lu_empid').value       = l.empid;
+    document.getElementById('lu_name').value        = l.name;
+    document.getElementById('lu_designation').value = l.desig;
+    document.getElementById('lu_spec').value        = l.spec;
+    document.getElementById('lu_email').value       = l.email;
+    document.getElementById('lu_mobile').value      = l.mobile;
+    document.getElementById('lu_status').value      = l.status;
+    document.getElementById('lu_exp').value         = l.exp;
+    document.getElementById('updateLecArea').style.display = 'block';
+  }
+
+  function updateLecturer() {
+    const empid = document.getElementById('lu_empid').value;
+    const idx = lecturers.findIndex(l => l.empid === empid);
+    if (idx === -1) return;
+    lecturers[idx].name   = document.getElementById('lu_name').value;
+    lecturers[idx].desig  = document.getElementById('lu_designation').value;
+    lecturers[idx].spec   = document.getElementById('lu_spec').value;
+    lecturers[idx].email  = document.getElementById('lu_email').value;
+    lecturers[idx].mobile = document.getElementById('lu_mobile').value;
+    lecturers[idx].status = document.getElementById('lu_status').value;
+    lecturers[idx].exp    = document.getElementById('lu_exp').value;
+    saveLecs();
+    showAlert('updateLecSuccess');
+    document.getElementById('updateLecArea').style.display = 'none';
+  }
+
+  function searchLecForDelete() {
+    const q = document.getElementById('ld_search').value.trim();
+    const l = lecturers.find(x => x.empid === q);
+    if (!l) { alert('Lecturer not found!'); return; }
+    delLecTarget = l.empid;
+    document.getElementById('deleteLecBody').innerHTML =
+      `<tr><td>${l.empid}</td><td>${l.name}</td><td>${l.desig}</td><td>${l.dept}</td><td>${statusBadge(l.status)}</td></tr>`;
+    document.getElementById('deleteLecArea').style.display = 'block';
+  }
+
+  function confirmLecDelete() {
+    if (!delLecTarget) return;
+    lecturers = lecturers.filter(l => l.empid !== delLecTarget);
+    saveLecs(); delLecTarget = null;
+    document.getElementById('deleteLecArea').style.display = 'none';
+    document.getElementById('ld_search').value = '';
+    showAlert('deleteLecSuccess');
+  }
+
+  function quickDeleteLec(empid) {
+    if (!confirm(`Delete lecturer ${empid}?`)) return;
+    lecturers = lecturers.filter(l => l.empid !== empid);
+    saveLecs(); renderLecTable();
+  }
+
+  function quickEditLec(empid) {
+    document.getElementById('lu_search').value = empid;
+    showPanel('updateLecturer', document.querySelectorAll('.sidebar-menu a')[2]);
+    setTimeout(() => searchLecForUpdate(), 50);
+  }
+
+  function searchLecturers() {
+    const by = document.getElementById('lsrch_by').value;
+    const kw = document.getElementById('lsrch_kw').value.toLowerCase();
+    const field = by === 'designation' ? 'desig' : by;
+    const res = lecturers.filter(l => (l[field] || '').toLowerCase().includes(kw));
+    const div = document.getElementById('lecSearchResults');
+    if (!res.length) { div.innerHTML = '<div class="empty-msg">No lecturers found.</div>'; return; }
+    div.innerHTML = `<div class="data-table-wrap"><table class="data-table">
+      <thead><tr><th>Emp ID</th><th>Name</th><th>Designation</th><th>Department</th><th>Email</th><th>Status</th></tr></thead>
+      <tbody>${res.map(l => `<tr>
+        <td><strong>${l.empid}</strong></td><td>${l.name}</td><td>${l.desig}</td>
+        <td>${l.dept}</td><td>${l.email}</td><td>${statusBadge(l.status)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div><p class="text-muted mt-12">${res.length} result(s) found.</p>`;
+  }
+
+  function showAlert(id) {
+    const el = document.getElementById(id);
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  const user = sessionStorage.getItem('erp_user');
+  if (!user) window.location.href = 'index.html';
+  else document.getElementById('welcomeUser').textContent = user.toUpperCase();
+</script>
+</body>
+</html>

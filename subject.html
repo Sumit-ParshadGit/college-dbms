@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Subject Module</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="yellow-topbar"></div>
+
+<div class="site-header">
+  <div class="header-logo-circle">🎓</div>
+  <div class="header-text">
+    <div class="hindi">डॉ बी आर अम्बेडकर &nbsp;|&nbsp; राष्ट्रीय प्रौद्योगिकी संस्थान</div>
+    <div class="institute-name">College Administration ERP System</div>
+    <div class="sub-name">Department of Academic Affairs &amp; Administration</div>
+  </div>
+</div>
+
+<div class="site-navbar">
+  <div class="navbar-brand">| ERP - ADMIN |</div>
+  <a href="dashboard.html">🏠 Home</a>
+  <a href="subject.html" class="active">📖 Subject Module</a>
+  <div class="navbar-right">
+    <div class="welcome-text">Welcome &nbsp;<span id="welcomeUser">ADMIN</span></div>
+    <a href="#">🔑 Change Password</a>
+    <a href="index.html" onclick="sessionStorage.clear()">↪ Logout</a>
+  </div>
+</div>
+
+<div class="module-layout">
+
+  <div class="module-sidebar">
+    <div class="sidebar-heading">Subject Menu</div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active" onclick="showPanel('addSubject', this)"><span class="menu-icon">➕</span> Add Subject</a></li>
+      <li><a href="#" onclick="showPanel('viewSubjects', this)"><span class="menu-icon">📋</span> View All Subjects</a></li>
+      <li><a href="#" onclick="showPanel('updateSubject', this)"><span class="menu-icon">✏️</span> Update Subject</a></li>
+      <li><a href="#" onclick="showPanel('deleteSubject', this)"><span class="menu-icon">🗑️</span> Delete Subject</a></li>
+      <li><a href="#" onclick="showPanel('searchSubject', this)"><span class="menu-icon">🔍</span> Search Subject</a></li>
+    </ul>
+  </div>
+
+  <div class="module-content">
+
+    <!-- ADD -->
+    <div class="content-panel active" id="addSubject">
+      <div class="panel-title">➕ Add New Subject</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="addSubSuccess">✅ Subject added successfully!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Subject Code *</label><input type="text" id="s_code" placeholder="e.g. CS401"></div>
+          <div class="form-group"><label>Subject Name *</label><input type="text" id="s_name" placeholder="e.g. Data Structures"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department *</label>
+            <select id="s_dept">
+              <option value="">-- Select --</option>
+              <option>Computer Science and Engineering</option>
+              <option>Information Technology</option>
+              <option>Electronics and Communication</option>
+              <option>Electrical Engineering</option>
+              <option>Mechanical Engineering</option>
+              <option>Civil Engineering</option>
+              <option>Mathematics</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Management Studies</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <select id="s_sem">
+              <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+              <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Subject Type</label>
+            <select id="s_type">
+              <option>Theory</option><option>Practical</option>
+              <option>Theory + Practical</option><option>Elective</option><option>Open Elective</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Credits</label>
+            <select id="s_credits">
+              <option>1</option><option>2</option><option selected>3</option>
+              <option>4</option><option>5</option><option>6</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Lecture Hours / Week</label><input type="number" id="s_lecture" placeholder="e.g. 3" min="0" max="10"></div>
+          <div class="form-group"><label>Lab Hours / Week</label><input type="number" id="s_lab" placeholder="e.g. 2" min="0" max="10"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status</label>
+            <select id="s_status"><option>Active</option><option>Inactive</option></select>
+          </div>
+          <div class="form-group">
+            <label>Applicable Course</label>
+            <select id="s_course">
+              <option>B.Tech</option><option>M.Tech</option><option>MBA</option><option>MCA</option><option>All</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Description / Syllabus Outline</label><textarea id="s_desc" placeholder="Brief description or syllabus outline..."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="addSubject()">➕ Add Subject</button>
+          <button class="btn btn-secondary" onclick="clearSubForm()">🔄 Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW -->
+    <div class="content-panel" id="viewSubjects">
+      <div class="panel-title">📋 All Subjects</div>
+      <div class="panel-body">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <input type="text" id="sViewSearch" placeholder="Search code, name, department..." oninput="filterSubTable()">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showPanel('addSubject',null)">➕ Add Subject</button>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr>
+              <th>#</th><th>Code</th><th>Subject Name</th><th>Department</th>
+              <th>Sem</th><th>Type</th><th>Credits</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="subTableBody"><tr><td colspan="9" class="empty-msg">No subjects found.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <div class="content-panel" id="updateSubject">
+      <div class="panel-title">✏️ Update Subject</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="updateSubSuccess">✅ Subject updated!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Search by Subject Code</label><input type="text" id="su_search" placeholder="e.g. CS401"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchSubForUpdate()">🔍 Find</button>
+          </div>
+        </div>
+        <div class="separator"></div>
+        <div id="updateSubArea" style="display:none;">
+          <div class="form-row">
+            <div class="form-group"><label>Code</label><input type="text" id="su_code" readonly style="background:#eee;"></div>
+            <div class="form-group"><label>Subject Name *</label><input type="text" id="su_name"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Department</label>
+              <select id="su_dept">
+                <option>Computer Science and Engineering</option><option>Information Technology</option>
+                <option>Electronics and Communication</option><option>Electrical Engineering</option>
+                <option>Mechanical Engineering</option><option>Mathematics</option><option>Physics</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Semester</label>
+              <select id="su_sem">
+                <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+                <option>5th</option><option>6th</option><option>7th</option><option>8th</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Credits</label>
+              <select id="su_credits">
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="su_status"><option>Active</option><option>Inactive</option></select>
+            </div>
+          </div>
+          <div class="form-row"><div class="form-group"><label>Description</label><textarea id="su_desc"></textarea></div></div>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="updateSubject()">💾 Save Changes</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('updateSubArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE -->
+    <div class="content-panel" id="deleteSubject">
+      <div class="panel-title">🗑️ Delete Subject</div>
+      <div class="panel-body">
+        <div class="alert alert-danger show" style="display:block!important;">⚠️ Deleting a subject is permanent.</div>
+        <div class="alert alert-success" id="deleteSubSuccess">✅ Subject deleted!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Search by Subject Code</label><input type="text" id="sd_search" placeholder="e.g. CS401"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchSubForDelete()">🔍 Find</button>
+          </div>
+        </div>
+        <div id="deleteSubArea" style="display:none; margin-top:14px;">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Name</th><th>Department</th><th>Sem</th><th>Credits</th></tr></thead>
+            <tbody id="deleteSubBody"></tbody>
+          </table>
+          <div class="form-actions" style="margin-top:14px;">
+            <button class="btn btn-danger" onclick="confirmSubDelete()">🗑️ Confirm Delete</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('deleteSubArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="content-panel" id="searchSubject">
+      <div class="panel-title">🔍 Search Subject</div>
+      <div class="panel-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Search by</label>
+            <select id="ssrch_by">
+              <option value="name">Name</option>
+              <option value="code">Code</option>
+              <option value="dept">Department</option>
+              <option value="sem">Semester</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Keyword</label><input type="text" id="ssrch_kw" placeholder="Enter keyword"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchSubjects()">🔍 Search</button>
+          </div>
+        </div>
+        <div id="subSearchResults" style="margin-top:16px;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="site-footer">&copy; 2025 College Administration ERP System. All Rights Reserved.</div>
+
+<script>
+  let subjects = JSON.parse(localStorage.getItem('erp_subjects') || '[]');
+  let delSubTarget = null;
+
+  function saveSubs() { localStorage.setItem('erp_subjects', JSON.stringify(subjects)); }
+
+  function showPanel(id, link) {
+    document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    if (id === 'viewSubjects') renderSubTable();
+  }
+
+  function addSubject() {
+    const code = document.getElementById('s_code').value.trim();
+    const name = document.getElementById('s_name').value.trim();
+    const dept = document.getElementById('s_dept').value;
+    if (!code || !name || !dept) { alert('Code, Name, and Department are required.'); return; }
+    if (subjects.find(s => s.code === code)) { alert('Subject code already exists!'); return; }
+    subjects.push({
+      code, name, dept,
+      sem:     document.getElementById('s_sem').value,
+      type:    document.getElementById('s_type').value,
+      credits: document.getElementById('s_credits').value,
+      lecture: document.getElementById('s_lecture').value,
+      lab:     document.getElementById('s_lab').value,
+      status:  document.getElementById('s_status').value,
+      course:  document.getElementById('s_course').value,
+      desc:    document.getElementById('s_desc').value
+    });
+    saveSubs();
+    showAlert('addSubSuccess');
+    clearSubForm();
+  }
+
+  function clearSubForm() {
+    ['s_code','s_name','s_lecture','s_lab','s_desc'].forEach(id => document.getElementById(id).value = '');
+    ['s_dept'].forEach(id => document.getElementById(id).selectedIndex = 0);
+    document.getElementById('s_credits').value = '3';
+    document.getElementById('s_status').value = 'Active';
+  }
+
+  function renderSubTable(data) {
+    const list = data || subjects;
+    const tbody = document.getElementById('subTableBody');
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-msg">No subjects found.</td></tr>'; return; }
+    tbody.innerHTML = list.map((s, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td><strong>${s.code}</strong></td>
+        <td>${s.name}</td>
+        <td>${s.dept}</td>
+        <td>${s.sem}</td>
+        <td>${s.type}</td>
+        <td>${s.credits}</td>
+        <td><span class="badge ${s.status==='Active'?'badge-success':'badge-danger'}">${s.status}</span></td>
+        <td><div class="action-btns">
+          <button class="btn btn-warning btn-sm" onclick="quickEditSub('${s.code}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="quickDeleteSub('${s.code}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function filterSubTable() {
+    const q = document.getElementById('sViewSearch').value.toLowerCase();
+    renderSubTable(subjects.filter(s =>
+      s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q) || (s.dept||'').toLowerCase().includes(q)
+    ));
+  }
+
+  function searchSubForUpdate() {
+    const q = document.getElementById('su_search').value.trim().toUpperCase();
+    const s = subjects.find(x => x.code.toUpperCase() === q);
+    if (!s) { alert('Subject not found!'); return; }
+    document.getElementById('su_code').value    = s.code;
+    document.getElementById('su_name').value    = s.name;
+    document.getElementById('su_dept').value    = s.dept;
+    document.getElementById('su_sem').value     = s.sem;
+    document.getElementById('su_credits').value = s.credits;
+    document.getElementById('su_status').value  = s.status;
+    document.getElementById('su_desc').value    = s.desc;
+    document.getElementById('updateSubArea').style.display = 'block';
+  }
+
+  function updateSubject() {
+    const code = document.getElementById('su_code').value;
+    const idx = subjects.findIndex(s => s.code === code);
+    if (idx === -1) return;
+    subjects[idx].name    = document.getElementById('su_name').value;
+    subjects[idx].dept    = document.getElementById('su_dept').value;
+    subjects[idx].sem     = document.getElementById('su_sem').value;
+    subjects[idx].credits = document.getElementById('su_credits').value;
+    subjects[idx].status  = document.getElementById('su_status').value;
+    subjects[idx].desc    = document.getElementById('su_desc').value;
+    saveSubs();
+    showAlert('updateSubSuccess');
+    document.getElementById('updateSubArea').style.display = 'none';
+  }
+
+  function searchSubForDelete() {
+    const q = document.getElementById('sd_search').value.trim().toUpperCase();
+    const s = subjects.find(x => x.code.toUpperCase() === q);
+    if (!s) { alert('Subject not found!'); return; }
+    delSubTarget = s.code;
+    document.getElementById('deleteSubBody').innerHTML =
+      `<tr><td>${s.code}</td><td>${s.name}</td><td>${s.dept}</td><td>${s.sem}</td><td>${s.credits}</td></tr>`;
+    document.getElementById('deleteSubArea').style.display = 'block';
+  }
+
+  function confirmSubDelete() {
+    if (!delSubTarget) return;
+    subjects = subjects.filter(s => s.code !== delSubTarget);
+    saveSubs(); delSubTarget = null;
+    document.getElementById('deleteSubArea').style.display = 'none';
+    document.getElementById('sd_search').value = '';
+    showAlert('deleteSubSuccess');
+  }
+
+  function quickDeleteSub(code) {
+    if (!confirm(`Delete subject ${code}?`)) return;
+    subjects = subjects.filter(s => s.code !== code);
+    saveSubs(); renderSubTable();
+  }
+
+  function quickEditSub(code) {
+    document.getElementById('su_search').value = code;
+    showPanel('updateSubject', document.querySelectorAll('.sidebar-menu a')[2]);
+    setTimeout(() => searchSubForUpdate(), 50);
+  }
+
+  function searchSubjects() {
+    const by = document.getElementById('ssrch_by').value;
+    const kw = document.getElementById('ssrch_kw').value.toLowerCase();
+    const res = subjects.filter(s => (s[by] || '').toLowerCase().includes(kw));
+    const div = document.getElementById('subSearchResults');
+    if (!res.length) { div.innerHTML = '<div class="empty-msg">No subjects found.</div>'; return; }
+    div.innerHTML = `<div class="data-table-wrap"><table class="data-table">
+      <thead><tr><th>Code</th><th>Name</th><th>Department</th><th>Semester</th><th>Credits</th><th>Status</th></tr></thead>
+      <tbody>${res.map(s => `<tr>
+        <td><strong>${s.code}</strong></td><td>${s.name}</td><td>${s.dept}</td>
+        <td>${s.sem}</td><td>${s.credits}</td>
+        <td><span class="badge ${s.status==='Active'?'badge-success':'badge-danger'}">${s.status}</span></td>
+      </tr>`).join('')}</tbody>
+    </table></div><p class="text-muted mt-12">${res.length} result(s) found.</p>`;
+  }
+
+  function showAlert(id) {
+    const el = document.getElementById(id);
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  const user = sessionStorage.getItem('erp_user');
+  if (!user) window.location.href = 'index.html';
+  else document.getElementById('welcomeUser').textContent = user.toUpperCase();
+</script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College ERP - Course Module</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="yellow-topbar"></div>
+
+<div class="site-header">
+  <div class="header-logo-circle">🎓</div>
+  <div class="header-text">
+    <div class="hindi">डॉ बी आर अम्बेडकर &nbsp;|&nbsp; राष्ट्रीय प्रौद्योगिकी संस्थान</div>
+    <div class="institute-name">College Administration ERP System</div>
+    <div class="sub-name">Department of Academic Affairs &amp; Administration</div>
+  </div>
+</div>
+
+<div class="site-navbar">
+  <div class="navbar-brand">| ERP - ADMIN |</div>
+  <a href="dashboard.html">🏠 Home</a>
+  <a href="course.html" class="active">📚 Course Module</a>
+  <div class="navbar-right">
+    <div class="welcome-text">Welcome &nbsp;<span id="welcomeUser">ADMIN</span></div>
+    <a href="#">🔑 Change Password</a>
+    <a href="index.html" onclick="sessionStorage.clear()">↪ Logout</a>
+  </div>
+</div>
+
+<div class="module-layout">
+
+  <div class="module-sidebar">
+    <div class="sidebar-heading">Course Menu</div>
+    <ul class="sidebar-menu">
+      <li><a href="#" class="active" onclick="showPanel('addCourse', this)"><span class="menu-icon">➕</span> Add Course</a></li>
+      <li><a href="#" onclick="showPanel('viewCourses', this)"><span class="menu-icon">📋</span> View All Courses</a></li>
+      <li><a href="#" onclick="showPanel('updateCourse', this)"><span class="menu-icon">✏️</span> Update Course</a></li>
+      <li><a href="#" onclick="showPanel('deleteCourse', this)"><span class="menu-icon">🗑️</span> Delete Course</a></li>
+    </ul>
+  </div>
+
+  <div class="module-content">
+
+    <!-- ADD COURSE -->
+    <div class="content-panel active" id="addCourse">
+      <div class="panel-title">➕ Add New Course</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="addCourseSuccess">✅ Course added successfully!</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Course Code *</label>
+            <input type="text" id="c_code" placeholder="e.g. BTECH-CSE">
+          </div>
+          <div class="form-group">
+            <label>Course Name *</label>
+            <input type="text" id="c_name" placeholder="e.g. Bachelor of Technology">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department</label>
+            <select id="c_dept">
+              <option value="">-- Select Department --</option>
+              <option>Computer Science and Engineering</option>
+              <option>Information Technology</option>
+              <option>Electronics and Communication</option>
+              <option>Electrical Engineering</option>
+              <option>Mechanical Engineering</option>
+              <option>Civil Engineering</option>
+              <option>Management Studies</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Duration (Years)</label>
+            <select id="c_duration">
+              <option>1</option><option>2</option><option>3</option>
+              <option selected>4</option><option>5</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Total Credits</label>
+            <input type="number" id="c_credits" placeholder="e.g. 160" min="0">
+          </div>
+          <div class="form-group">
+            <label>Degree Type</label>
+            <select id="c_degree">
+              <option>Undergraduate</option>
+              <option>Postgraduate</option>
+              <option>Doctorate</option>
+              <option>Diploma</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Eligibility</label>
+            <input type="text" id="c_eligibility" placeholder="e.g. 10+2 with PCM">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="c_status">
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="c_desc" placeholder="Brief course description..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="addCourse()">➕ Add Course</button>
+          <button class="btn btn-secondary" onclick="clearCourseForm()">🔄 Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW COURSES -->
+    <div class="content-panel" id="viewCourses">
+      <div class="panel-title">📋 All Courses</div>
+      <div class="panel-body">
+        <div class="table-toolbar">
+          <div class="search-box">
+            <input type="text" id="cViewSearch" placeholder="Search by name, code, department..." oninput="filterCourseTable()">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="showPanel('addCourse', null)">➕ Add Course</button>
+        </div>
+        <div class="data-table-wrap">
+          <table class="data-table" id="courseTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Code</th>
+                <th>Course Name</th>
+                <th>Department</th>
+                <th>Duration</th>
+                <th>Credits</th>
+                <th>Degree</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="courseTableBody">
+              <tr><td colspan="9" class="empty-msg">No courses found. Add courses to see them here.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPDATE COURSE -->
+    <div class="content-panel" id="updateCourse">
+      <div class="panel-title">✏️ Update Course</div>
+      <div class="panel-body">
+        <div class="alert alert-success" id="updateCourseSuccess">✅ Course updated successfully!</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Search by Course Code</label>
+            <input type="text" id="cu_search" placeholder="Enter Course Code">
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchCourseForUpdate()">🔍 Find Course</button>
+          </div>
+        </div>
+        <div class="separator"></div>
+        <div id="updateCourseArea" style="display:none;">
+          <div class="form-row">
+            <div class="form-group"><label>Code</label><input type="text" id="cu_code" readonly style="background:#eee;"></div>
+            <div class="form-group"><label>Course Name *</label><input type="text" id="cu_name"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Department</label>
+              <select id="cu_dept">
+                <option>Computer Science and Engineering</option>
+                <option>Information Technology</option>
+                <option>Electronics and Communication</option>
+                <option>Electrical Engineering</option>
+                <option>Mechanical Engineering</option>
+                <option>Civil Engineering</option>
+                <option>Management Studies</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Total Credits</label><input type="number" id="cu_credits"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Eligibility</label><input type="text" id="cu_eligibility"></div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="cu_status"><option>Active</option><option>Inactive</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Description</label><textarea id="cu_desc"></textarea></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-success" onclick="updateCourse()">💾 Save Changes</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('updateCourseArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE COURSE -->
+    <div class="content-panel" id="deleteCourse">
+      <div class="panel-title">🗑️ Delete Course</div>
+      <div class="panel-body">
+        <div class="alert alert-danger show" style="display:block!important;">⚠️ Deleting a course is permanent. Ensure no students are enrolled.</div>
+        <div class="alert alert-success" id="deleteCourseSuccess">✅ Course deleted successfully!</div>
+        <div class="form-row">
+          <div class="form-group"><label>Search by Course Code</label><input type="text" id="cd_search" placeholder="Enter Course Code"></div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-primary" onclick="searchCourseForDelete()">🔍 Find Course</button>
+          </div>
+        </div>
+        <div id="deleteCourseArea" style="display:none; margin-top:14px;">
+          <table class="data-table">
+            <thead><tr><th>Code</th><th>Course Name</th><th>Department</th><th>Duration</th><th>Status</th></tr></thead>
+            <tbody id="deleteCourseBody"></tbody>
+          </table>
+          <div class="form-actions" style="margin-top:14px;">
+            <button class="btn btn-danger" onclick="confirmCourseDelete()">🗑️ Confirm Delete</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('deleteCourseArea').style.display='none'">✖ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="site-footer">&copy; 2025 College Administration ERP System. All Rights Reserved.</div>
+
+<script>
+  let courses = JSON.parse(localStorage.getItem('erp_courses') || '[]');
+  let delCourseTarget = null;
+
+  function saveCourses() { localStorage.setItem('erp_courses', JSON.stringify(courses)); }
+
+  function showPanel(id, link) {
+    document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    if (id === 'viewCourses') renderCourseTable();
+  }
+
+  function addCourse() {
+    const code = document.getElementById('c_code').value.trim();
+    const name = document.getElementById('c_name').value.trim();
+    if (!code || !name) { alert('Course Code and Name are required.'); return; }
+    if (courses.find(c => c.code === code)) { alert('Course code already exists!'); return; }
+    courses.push({
+      code, name,
+      dept:        document.getElementById('c_dept').value,
+      duration:    document.getElementById('c_duration').value,
+      credits:     document.getElementById('c_credits').value,
+      degree:      document.getElementById('c_degree').value,
+      eligibility: document.getElementById('c_eligibility').value,
+      status:      document.getElementById('c_status').value,
+      desc:        document.getElementById('c_desc').value
+    });
+    saveCourses();
+    showAlert('addCourseSuccess');
+    clearCourseForm();
+  }
+
+  function clearCourseForm() {
+    ['c_code','c_name','c_credits','c_eligibility','c_desc'].forEach(id => document.getElementById(id).value = '');
+    ['c_dept','c_degree','c_status'].forEach(id => document.getElementById(id).selectedIndex = 0);
+    document.getElementById('c_duration').value = '4';
+  }
+
+  function renderCourseTable(data) {
+    const list = data || courses;
+    const tbody = document.getElementById('courseTableBody');
+    if (!list.length) { tbody.innerHTML = '<tr><td colspan="9" class="empty-msg">No courses found.</td></tr>'; return; }
+    tbody.innerHTML = list.map((c, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td><strong>${c.code}</strong></td>
+        <td>${c.name}</td>
+        <td>${c.dept}</td>
+        <td>${c.duration} yr</td>
+        <td>${c.credits || '-'}</td>
+        <td>${c.degree}</td>
+        <td><span class="badge ${c.status==='Active'?'badge-success':'badge-danger'}">${c.status}</span></td>
+        <td><div class="action-btns">
+          <button class="btn btn-warning btn-sm" onclick="quickEditCourse('${c.code}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="quickDeleteCourse('${c.code}')">🗑️</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function filterCourseTable() {
+    const q = document.getElementById('cViewSearch').value.toLowerCase();
+    renderCourseTable(courses.filter(c =>
+      c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q) || (c.dept||'').toLowerCase().includes(q)
+    ));
+  }
+
+  function searchCourseForUpdate() {
+    const q = document.getElementById('cu_search').value.trim().toUpperCase();
+    const c = courses.find(x => x.code.toUpperCase() === q);
+    if (!c) { alert('Course not found!'); return; }
+    document.getElementById('cu_code').value = c.code;
+    document.getElementById('cu_name').value = c.name;
+    document.getElementById('cu_dept').value = c.dept;
+    document.getElementById('cu_credits').value = c.credits;
+    document.getElementById('cu_eligibility').value = c.eligibility;
+    document.getElementById('cu_status').value = c.status;
+    document.getElementById('cu_desc').value = c.desc;
+    document.getElementById('updateCourseArea').style.display = 'block';
+  }
+
+  function updateCourse() {
+    const code = document.getElementById('cu_code').value;
+    const idx = courses.findIndex(c => c.code === code);
+    if (idx === -1) return;
+    courses[idx].name        = document.getElementById('cu_name').value;
+    courses[idx].dept        = document.getElementById('cu_dept').value;
+    courses[idx].credits     = document.getElementById('cu_credits').value;
+    courses[idx].eligibility = document.getElementById('cu_eligibility').value;
+    courses[idx].status      = document.getElementById('cu_status').value;
+    courses[idx].desc        = document.getElementById('cu_desc').value;
+    saveCourses();
+    showAlert('updateCourseSuccess');
+    document.getElementById('updateCourseArea').style.display = 'none';
+  }
+
+  function searchCourseForDelete() {
+    const q = document.getElementById('cd_search').value.trim().toUpperCase();
+    const c = courses.find(x => x.code.toUpperCase() === q);
+    if (!c) { alert('Course not found!'); return; }
+    delCourseTarget = c.code;
+    document.getElementById('deleteCourseBody').innerHTML = `
+      <tr><td>${c.code}</td><td>${c.name}</td><td>${c.dept}</td><td>${c.duration} yr</td>
+      <td><span class="badge ${c.status==='Active'?'badge-success':'badge-danger'}">${c.status}</span></td></tr>`;
+    document.getElementById('deleteCourseArea').style.display = 'block';
+  }
+
+  function confirmCourseDelete() {
+    if (!delCourseTarget) return;
+    courses = courses.filter(c => c.code !== delCourseTarget);
+    saveCourses(); delCourseTarget = null;
+    document.getElementById('deleteCourseArea').style.display = 'none';
+    document.getElementById('cd_search').value = '';
+    showAlert('deleteCourseSuccess');
+  }
+
+  function quickDeleteCourse(code) {
+    if (!confirm(`Delete course ${code}?`)) return;
+    courses = courses.filter(c => c.code !== code);
+    saveCourses(); renderCourseTable();
+  }
+
+  function quickEditCourse(code) {
+    document.getElementById('cu_search').value = code;
+    showPanel('updateCourse', document.querySelectorAll('.sidebar-menu a')[2]);
+    setTimeout(() => searchCourseForUpdate(), 50);
+  }
+
+  function showAlert(id) {
+    const el = document.getElementById(id);
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  const user = sessionStorage.getItem('erp_user');
+  if (!user) window.location.href = 'index.html';
+  else document.getElementById('welcomeUser').textContent = user.toUpperCase();
+</script>
+</body>
+</html>
