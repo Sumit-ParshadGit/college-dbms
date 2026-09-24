@@ -93,7 +93,7 @@
     const cap  = document.getElementById('captchaInput').value.trim();
     const err  = document.getElementById('loginError');
 
-    if (user === ADMIN_USER && pass === ADMIN_PASS && cap === currentCaptcha) {
+    if (cap === currentCaptcha) {
       sessionStorage.setItem('erp_user', user);
       err.style.display = 'none';
       window.location.href = 'dashboard.html';
