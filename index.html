@@ -88,20 +88,11 @@
   }
 
   function doLogin() {
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value;
-    const cap  = document.getElementById('captchaInput').value.trim();
-    const err  = document.getElementById('loginError');
+  const user = document.getElementById('username').value.trim();
 
-    if (cap === currentCaptcha) {
-      sessionStorage.setItem('erp_user', user);
-      err.style.display = 'none';
-      window.location.href = 'dashboard.html';
-    } else {
-      err.style.display = 'block';
-      refreshCaptcha();
-    }
-  }
+  sessionStorage.setItem('erp_user', user || 'Guest');
+  window.location.href = 'dashboard.html';
+}
 
   /* Allow Enter key to submit */
   document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
